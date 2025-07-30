@@ -10,6 +10,9 @@ import { extractYear, removeDoi, truncateText } from "../../utils/format";
 // Import types:
 import { Article } from "../../types";
 
+// Import api:
+import { getAbstract } from "../../api/pubmed";
+
 type TableProps = {
   data: Article[];
   currentPage: number;
@@ -29,20 +32,9 @@ function Table({ data, currentPage, setCurrentPage }: TableProps) {
     currentPage * ITEMS_PER_PAGE
   );
 
-  const getAbstract = async (uid: string) => {
-    try {
-      const res = await fetch(
-        `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${uid}&retmode=json&rettype=abstract`
-      );
-      const text = await res.text();
-      setAbstract(text);
-    } catch (err) {
-      console.log("Error getting abstract.");
-    }
-  };
-
   const openSummary = async (value: Article) => {
-    await getAbstract(value.uid);
+    const text = await getAbstract(value.uid);
+    setAbstract(text);
     setSelectedArticle(value);
     setIsOpen(true);
   };
