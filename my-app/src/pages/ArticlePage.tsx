@@ -16,6 +16,7 @@ function ArticlePage() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [journal, setJournal] = useState("");
+  const [year, setYear] = useState("");
   const [appliedFilter, setAppliedFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -34,10 +35,11 @@ function ArticlePage() {
       title,
       author,
       journal,
+      year
     });
     setArticles(filtered);
     setCurrentPage(1);
-    if (title === "" && author === "" && journal === "")
+    if (title === "" && author === "" && journal === "" && year ==="")
       setAppliedFilter(false);
     else setAppliedFilter(true);
   };
@@ -56,6 +58,8 @@ function ArticlePage() {
             setAuthor={setAuthor}
             journal={journal}
             setJournal={setJournal}
+            year={year}
+            setYear={setYear}
             appliedFilter={appliedFilter}
             setAppliedFilter={setAppliedFilter}
             onApply={applyFilters}

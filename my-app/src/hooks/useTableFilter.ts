@@ -6,10 +6,11 @@ export const useTableFilter = (initialData: Article[]) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [journal, setJournal] = useState("");
+  const [year, setYear] =useState("")
 
   const filteredData = useMemo(() => {
-    return filterTableData(initialData, { title, author, journal });
-  }, [initialData, title, author, journal]);
+    return filterTableData(initialData, { title, author, journal, year });
+  }, [initialData, title, author, journal, year]);
 
   return {
     title,
@@ -18,6 +19,8 @@ export const useTableFilter = (initialData: Article[]) => {
     setAuthor,
     journal,
     setJournal,
+    year,
+    setYear,
     filteredData,
   };
 };
