@@ -67,7 +67,7 @@ function Table({ data, currentPage, setCurrentPage }: TableProps) {
             {paginatedData.map((value, index) => (
               <tr
                 className={`hover:bg-gray-100 hover:text-[#166088]  cursor-pointer ${
-                  index % 2 === 0 ? "bg-[#DBE9EE]" : "bg-[#C0D6DF]"
+                  index % 2 === 0 ? "bg-[#dbe9eec1]" : "bg-[#c0d6dfdb]"
                 }`}
                 key={value.uid}
                 onClick={() => openSummary(value)}
@@ -84,6 +84,9 @@ function Table({ data, currentPage, setCurrentPage }: TableProps) {
         </table>
       </div>
       <div className="flex justify-center mt-3 space-x-3">
+        <div className="text-sm text-gray-700 p-1">
+          Page <b>{currentPage}</b> of {totalPages}
+        </div>
         <Button
           className="text-xs"
           text="Previous page"
