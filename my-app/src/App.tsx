@@ -1,9 +1,8 @@
+import { ArticlePage } from "./pages";
 
 function App() {
   return (
-    <div className="bg-red-400 text-white p-4">
-      Hello world!
-    </div>
+    <ArticlePage/>
   );
 }
 
