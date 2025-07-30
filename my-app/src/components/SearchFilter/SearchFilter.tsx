@@ -29,7 +29,7 @@ function SearchFilter({
     setJournal("");
   };
   return (
-    <div className="p-4 space-y-4 text-xs">
+    <div className="md:p-4 space-y-4 text-xs">
       <Input
         label="Title"
         value={title}

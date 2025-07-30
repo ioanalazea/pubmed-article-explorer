@@ -7,7 +7,7 @@ type ButtonProps = {
 function Button({ text, className = "", ...props }: ButtonProps) {
   return (
     <button
-      className={`bg-[#4F6D7A] text-white font-bold uppercase rounded-md px-4 py-2 hover:bg-[#3e5963] transition-colors duration-200 ${className}`}
+      className={`bg-[#4F6D7A] text-white text-xs font-bold uppercase rounded-md px-4 py-2 hover:bg-[#3e5963] transition-colors duration-200 ${className}`}
       {...props}
     >
       {text}

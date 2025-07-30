@@ -78,7 +78,7 @@ function ArticlePage() {
         PubMed Article Explorer
       </div>
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-        <div className="w-full md:w-1/3 bg-[#e1e1e166] p-4 overflow-y-auto">
+        <div className="w-full md:w-1/3 bg-[#e1e1e166] md:p-4 overflow-y-auto">
           <SearchFilter
             title={title}
             setTitle={setTitle}

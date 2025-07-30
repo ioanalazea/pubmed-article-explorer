@@ -5,6 +5,7 @@ import { Article } from "../../types";
 // Import components:
 import { Summary } from "../Summary";
 import { Button } from "../UI";
+import { extractYear, removeDoi } from "../../utils/format";
 
 type TableProps = {
   data: Article[];
@@ -12,7 +13,7 @@ type TableProps = {
   setCurrentPage: (val: number) => void;
 };
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 7;
 
 function Table({ data, currentPage, setCurrentPage }: TableProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -64,8 +65,8 @@ function Table({ data, currentPage, setCurrentPage }: TableProps) {
               <td className="px-4 py-2 font-medium">{value.title}</td>
               <td className="px-4 py-2">{value.authors}</td>
               <td className="px-4 py-2">{value.journal}</td>
-              <td className="px-4 py-2">{value.year}</td>
-              <td className="px-4 py-2">{value.doi}</td>
+              <td className="px-4 py-2">{extractYear(value.year)}</td>
+              <td className="px-4 py-2">{removeDoi(value.doi)}</td>
               <td className="px-4 py-2">{value.pages}</td>
             </tr>
           ))}
