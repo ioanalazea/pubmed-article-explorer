@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 // Import components
-import { Table } from "../components";
+import { Button, Input, Table } from "../components";
 // Import types
 import { Article } from "../types";
 // Import utils
@@ -55,6 +55,12 @@ function ArticlePage() {
     <div>
       <div className="bg-[#166088] text-white font-bold text-2xl p-4">
         PubMed Article Explorer
+      </div>
+      <div>
+        <Input label="Title" />
+        <Input label="Author" />
+        <Input label="Journal" />
+        <Button text="Apply filters" className="m-4"/>
       </div>
       <Table data={articles} />
     </div>
