@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
 // Import components
-import { Button, Input, Table } from "../components";
+import { SearchFilter, Table } from "../components";
 // Import types
 import { Article } from "../types";
 // Import utils
 import { getAuthorNames } from "../utils/format";
+import { filterTableData } from "../utils/filterTableData";
 
 function ArticlePage() {
+  const [initialArticles, setInitialArticles] = useState<Article[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
+
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [journal, setJournal] = useState("");
+  const [appliedFilter, setAppliedFilter] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +48,7 @@ function ArticlePage() {
           };
         });
 
-        setArticles(results);
+        setInitialArticles(results);
       } catch (err) {
         console.log("Error");
       } finally {
@@ -51,18 +59,40 @@ function ArticlePage() {
     fetchData();
   }, []);
 
+  const applyFilters = () => {
+    const filtered = filterTableData(initialArticles, {
+      title,
+      author,
+      journal,
+    });
+    setArticles(filtered);
+    setCurrentPage(1);
+    if (title === "" && author === "" && journal === "")
+      setAppliedFilter(false);
+    else setAppliedFilter(true);
+  };
+
   return (
     <div>
       <div className="bg-[#166088] text-white font-bold text-2xl p-4">
         PubMed Article Explorer
       </div>
-      <div>
-        <Input label="Title" />
-        <Input label="Author" />
-        <Input label="Journal" />
-        <Button text="Apply filters" className="m-4"/>
-      </div>
-      <Table data={articles} />
+      <SearchFilter
+        title={title}
+        setTitle={setTitle}
+        author={author}
+        setAuthor={setAuthor}
+        journal={journal}
+        setJournal={setJournal}
+        appliedFilter={appliedFilter}
+        setAppliedFilter={setAppliedFilter}
+        onApply={applyFilters}
+      />
+      <Table
+        data={appliedFilter ? articles : initialArticles}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 }
