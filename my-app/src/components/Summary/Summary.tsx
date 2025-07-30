@@ -12,7 +12,7 @@ type SummaryProps = {
 function Summary({ article, abstract, close }: SummaryProps) {
   return (
     <div className="fixed top-0 right-0 h-full md:w-1/2 bg-white shadow-lg z-50 transition-all duration-300 p-2">
-      <div className="p-4 space-x-4 flex items-center">
+      <div className="p-4 space-x-4 flex items-center bg-[#4f6d7a44] rounded-md justify-between">
         <p className="text-xl font-bold text-left">{article?.title}</p>
         <Button onClick={close} text={"Close"} />
       </div>
