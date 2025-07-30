@@ -1,6 +1,10 @@
 import { useState } from "react";
+// Import types:
 import { Article } from "../../types";
+
+// Import components:
 import { Summary } from "../Summary";
+import { Button } from "../UI";
 
 type TableProps = {
   data: Article[];
@@ -64,20 +68,18 @@ function Table({ data }: TableProps) {
           ))}
         </tbody>
       </table>
-      <div className="flex justify-center mt-4 space-x-2">
-        <button
+      <div className="flex justify-center mt-3 space-x-3">
+        <Button
+          text="Previous page"
           onClick={() => goToPage(currentPage - 1)}
           disabled={currentPage === 1}
-        >
-          Previous page
-        </button>
+        />
 
-        <button
+        <Button
+          text="Next Page"
           onClick={() => goToPage(currentPage + 1)}
           disabled={currentPage === totalPages}
-        >
-          Next Page
-        </button>
+        />
       </div>
       {isOpen && (
         <>
