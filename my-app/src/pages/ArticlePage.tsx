@@ -73,26 +73,32 @@ function ArticlePage() {
   };
 
   return (
-    <div>
-      <div className="bg-[#166088] text-white font-bold text-2xl p-4">
+    <div className="h-screen flex flex-col">
+      <div className="bg-[#166088] text-white font-bold text-2xl p-6">
         PubMed Article Explorer
       </div>
-      <SearchFilter
-        title={title}
-        setTitle={setTitle}
-        author={author}
-        setAuthor={setAuthor}
-        journal={journal}
-        setJournal={setJournal}
-        appliedFilter={appliedFilter}
-        setAppliedFilter={setAppliedFilter}
-        onApply={applyFilters}
-      />
-      <Table
-        data={appliedFilter ? articles : initialArticles}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
+      <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+        <div className="w-full md:w-1/3 bg-[#e1e1e166] p-4 overflow-y-auto">
+          <SearchFilter
+            title={title}
+            setTitle={setTitle}
+            author={author}
+            setAuthor={setAuthor}
+            journal={journal}
+            setJournal={setJournal}
+            appliedFilter={appliedFilter}
+            setAppliedFilter={setAppliedFilter}
+            onApply={applyFilters}
+          />
+        </div>
+        <div className="w-full md:w-3/4 p-4 overflow-auto">
+          <Table
+            data={appliedFilter ? articles : initialArticles}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
+        </div>
+      </div>
     </div>
   );
 }

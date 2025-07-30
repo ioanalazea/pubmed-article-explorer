@@ -40,7 +40,7 @@ function Table({ data, currentPage, setCurrentPage }: TableProps) {
     }
   };
   return (
-    <div className="overflow-x-auto">
+    <div >
       <table className="table-auto border-gray-300">
         <thead>
           <tr className="bg-[#166088]">
