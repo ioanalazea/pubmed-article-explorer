@@ -1,11 +1,24 @@
+import { useState } from "react";
 import { Article } from "../../types";
+import { Summary } from "../Summary";
 
 type TableProps = {
   data: Article[];
 };
 
-export const Table: React.FC<TableProps> = ({ data }) => {
-    console.log("DATA", data)
+function Table({ data }: TableProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState(null);
+
+  const openSummary = (value: any) => {
+    setSelectedArticle(value);
+    setIsOpen(true);
+  };
+
+  const closeSummary = () => {
+    setSelectedArticle(null);
+    setIsOpen(false);
+  };
   return (
     <div className="overflow-x-auto">
       <table className="table-auto border-gray-300">
@@ -21,7 +34,7 @@ export const Table: React.FC<TableProps> = ({ data }) => {
         </thead>
         <tbody>
           {data.map((value) => (
-            <tr key={value.uid}>
+            <tr key={value.uid} onClick={() => openSummary(value)}>
               <td className="px-4 py-2">{value.title}</td>
               <td className="px-4 py-2">{value.authors}</td>
               <td className="px-4 py-2">{value.journal}</td>
@@ -32,6 +45,17 @@ export const Table: React.FC<TableProps> = ({ data }) => {
           ))}
         </tbody>
       </table>
+      {isOpen && (
+        <>
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={closeSummary}
+          ></div>
+          <Summary article={selectedArticle} close={closeSummary} />
+        </>
+      )}
     </div>
   );
-};
+}
+
+export { Table };
