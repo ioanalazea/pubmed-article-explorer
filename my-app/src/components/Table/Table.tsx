@@ -5,7 +5,7 @@ import { Summary } from "../Summary";
 import { Button } from "../UI";
 
 // Import utils:
-import { extractYear, removeDoi } from "../../utils/format";
+import { extractYear, removeDoi, truncateText } from "../../utils/format";
 
 // Import types:
 import { Article } from "../../types";
@@ -16,7 +16,7 @@ type TableProps = {
   setCurrentPage: (val: number) => void;
 };
 
-const ITEMS_PER_PAGE = 7;
+const ITEMS_PER_PAGE = 10;
 
 function Table({ data, currentPage, setCurrentPage }: TableProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,10 +58,10 @@ function Table({ data, currentPage, setCurrentPage }: TableProps) {
     }
   };
   return (
-    <div>
-      <table className="table-auto border-gray-300 text-xs">
+    <div className="md:max-h-[80vh] md:overflow-y-auto">
+      <table className="table-auto border-gray-300 text-xs w-full">
         <thead>
-          <tr className="bg-[#166088]">
+          <tr className="bg-[#166088] sticky top-0 z-10">
             <th className="px-4 py-2 font-bold text-white">Title</th>
             <th className="px-4 py-2 font-bold text-white">Authors</th>
             <th className="px-4 py-2 font-bold text-white">Journal</th>
@@ -80,7 +80,7 @@ function Table({ data, currentPage, setCurrentPage }: TableProps) {
               onClick={() => openSummary(value)}
             >
               <td className="px-4 py-2 font-medium">{value.title}</td>
-              <td className="px-4 py-2">{value.authors}</td>
+              <td className="px-4 py-2">{truncateText(value.authors, 30)}</td>
               <td className="px-4 py-2">{value.journal}</td>
               <td className="px-4 py-2">{extractYear(value.year)}</td>
               <td className="px-4 py-2">{removeDoi(value.doi)}</td>
