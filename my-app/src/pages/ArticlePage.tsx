@@ -12,18 +12,24 @@ function ArticlePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(
-          "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=artificial+intelligence+in+healthcare&retmode=json&retmax=1"
+        const idsRes = await fetch(
+          "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=artificial+intelligence+in+healthcare&retmode=json&retmax=20"
         );
-        const json = await res.json();
-        json.esearchresult.idlist.forEach(async (uid: any) => {
-          const res = await fetch(
-            `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=40642746&retmode=json`
-          );
+        const json = await idsRes.json();
+        const ids: string[] = json.esearchresult.idlist;
+        if (ids.length === 0) return;
 
-          const json = await res.json();
-          const article = json.result["40642746"]; // CHANGE HERE WITH UID LATER
-          const newArticle: Article = {
+        const articlesRes = await fetch(
+          `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${ids.join(
+            ","
+          )}&retmode=json`
+        );
+
+        const articlesJson = await articlesRes.json();
+
+        const results = ids.map((uid) => {
+          const article = articlesJson.result[uid];
+          return {
             uid: article.uid,
             title: article.title,
             authors: getAuthorNames(article.authors),
@@ -32,8 +38,9 @@ function ArticlePage() {
             doi: article.elocationid,
             pages: article.pages,
           };
-          if (newArticle) setArticles([...articles, newArticle]);
         });
+
+        setArticles(results);
       } catch (err) {
         console.log("Error");
       } finally {
@@ -46,7 +53,7 @@ function ArticlePage() {
 
   return (
     <div>
-      <div className="bg-[#74B3CE] text-white font-bold text-2xl p-4">
+      <div className="bg-[#166088] text-white font-bold text-2xl p-4">
         PubMed Article Explorer
       </div>
       <Table data={articles} />
