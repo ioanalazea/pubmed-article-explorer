@@ -11,6 +11,7 @@ import { filterTableData } from "../utils/filterTableData";
 function ArticlePage() {
   const [initialArticles, setInitialArticles] = useState<Article[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -20,8 +21,10 @@ function ArticlePage() {
 
   useEffect(() => {
     const loadArticles = async () => {
+      setLoading(true);
       const results = await getArticles();
       setInitialArticles(results);
+      setLoading(false);
     };
     loadArticles();
   }, []);
@@ -59,11 +62,17 @@ function ArticlePage() {
           />
         </div>
         <div className="w-full md:w-3/4 md:p-4 overflow-auto mt-2 md:mt-0 pb-2">
-          <Table
-            data={appliedFilter ? articles : initialArticles}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-          />
+          {loading ? (
+            <div className="flex justify-center items-center h-full">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-[#166088]"></div>
+            </div>
+          ) : (
+            <Table
+              data={appliedFilter ? articles : initialArticles}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
         </div>
       </div>
     </div>
