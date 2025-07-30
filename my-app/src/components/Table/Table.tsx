@@ -40,8 +40,8 @@ function Table({ data, currentPage, setCurrentPage }: TableProps) {
     }
   };
   return (
-    <div >
-      <table className="table-auto border-gray-300">
+    <div>
+      <table className="table-auto border-gray-300 text-xs">
         <thead>
           <tr className="bg-[#166088]">
             <th className="px-4 py-2 font-bold text-white">Title</th>
@@ -55,11 +55,13 @@ function Table({ data, currentPage, setCurrentPage }: TableProps) {
         <tbody>
           {paginatedData.map((value, index) => (
             <tr
-              className={index % 2 === 0 ? "bg-[#DBE9EE]" : "bg-[#C0D6DF]"}
+              className={`hover:bg-gray-100 hover:text-[#166088]  cursor-pointer ${
+                index % 2 === 0 ? "bg-[#DBE9EE]" : "bg-[#C0D6DF]"
+              }`}
               key={value.uid}
               onClick={() => openSummary(value)}
             >
-              <td className="px-4 py-2">{value.title}</td>
+              <td className="px-4 py-2 font-medium">{value.title}</td>
               <td className="px-4 py-2">{value.authors}</td>
               <td className="px-4 py-2">{value.journal}</td>
               <td className="px-4 py-2">{value.year}</td>
@@ -71,12 +73,14 @@ function Table({ data, currentPage, setCurrentPage }: TableProps) {
       </table>
       <div className="flex justify-center mt-3 space-x-3">
         <Button
+          className="text-xs"
           text="Previous page"
           onClick={() => goToPage(currentPage - 1)}
           disabled={currentPage === 1}
         />
 
         <Button
+          className="text-xs"
           text="Next Page"
           onClick={() => goToPage(currentPage + 1)}
           disabled={currentPage === totalPages}
