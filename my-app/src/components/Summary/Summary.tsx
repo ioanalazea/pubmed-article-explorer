@@ -2,6 +2,7 @@
 import { Button } from "../UI";
 // Import types:
 import { Article } from "../../types";
+// Import utils:
 import { extractYear, removeDoi } from "../../utils/format";
 
 type SummaryProps = {
@@ -9,6 +10,7 @@ type SummaryProps = {
   abstract: string;
   close: () => void;
 };
+
 function Summary({ article, abstract, close }: SummaryProps) {
   return (
     <div className="fixed top-0 right-0 h-full md:w-1/2 bg-white shadow-lg z-50 transition-all duration-300 p-2">

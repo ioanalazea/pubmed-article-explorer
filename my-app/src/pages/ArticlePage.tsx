@@ -35,11 +35,11 @@ function ArticlePage() {
       title,
       author,
       journal,
-      year
+      year,
     });
     setArticles(filtered);
     setCurrentPage(1);
-    if (title === "" && author === "" && journal === "" && year ==="")
+    if (title === "" && author === "" && journal === "" && year === "")
       setAppliedFilter(false);
     else setAppliedFilter(true);
   };

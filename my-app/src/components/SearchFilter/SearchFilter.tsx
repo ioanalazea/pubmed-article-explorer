@@ -1,3 +1,4 @@
+// Import components:
 import { Button, Input } from "../UI";
 
 type SearchFilterProps = {
@@ -13,6 +14,7 @@ type SearchFilterProps = {
   setAppliedFilter: (val: boolean) => void;
   onApply: () => void;
 };
+
 function SearchFilter({
   title,
   setTitle,

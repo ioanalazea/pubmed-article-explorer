@@ -1,7 +1,9 @@
 import { InputHTMLAttributes } from "react";
+
 type InputProps = {
   label?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
+
 function Input({ label, className = "", id, ...props }: InputProps) {
   return (
     <div className="flex flex-col space-y-1 m-4">

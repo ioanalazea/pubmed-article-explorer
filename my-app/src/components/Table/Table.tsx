@@ -1,15 +1,11 @@
 import { useState } from "react";
-
 // Import components:
 import { Summary } from "../Summary";
 import { Button } from "../UI";
-
 // Import utils:
 import { extractYear, removeDoi, truncateText } from "../../utils/format";
-
 // Import types:
 import { Article } from "../../types";
-
 // Import api:
 import { getAbstract } from "../../api/pubmed";
 

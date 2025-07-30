@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
-import { Article } from "../types";
+// Import utils:
 import { filterTableData } from "../utils/filterTableData";
+// Import types:
+import { Article } from "../types";
 
 export const useTableFilter = (initialData: Article[]) => {
   const [title, setTitle] = useState("");
