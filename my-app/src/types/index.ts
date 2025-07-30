@@ -3,6 +3,7 @@ export interface Article{
     title: string;
     authors: string;
     journal: string;
+    year: number;
     doi: string;
     pages: number;
 }
