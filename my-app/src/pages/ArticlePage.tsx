@@ -74,11 +74,11 @@ function ArticlePage() {
 
   return (
     <div className="h-screen flex flex-col">
-      <div className="bg-[#166088] text-white font-bold text-2xl p-6">
+      <div className="bg-[#166088] text-white font-bold text-2xl p-4">
         PubMed Article Explorer
       </div>
       <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-        <div className="w-full md:w-1/3 bg-[#e1e1e166] md:p-4 overflow-y-auto">
+        <div className="w-full md:w-1/3 bg-[#e1e1e166] md:p-4 pb-2">
           <SearchFilter
             title={title}
             setTitle={setTitle}
@@ -91,7 +91,7 @@ function ArticlePage() {
             onApply={applyFilters}
           />
         </div>
-        <div className="w-full md:w-3/4 p-4 overflow-auto">
+        <div className="w-full md:w-3/4 md:p-4 overflow-auto mt-2 md:mt-0 pb-2">
           <Table
             data={appliedFilter ? articles : initialArticles}
             currentPage={currentPage}
