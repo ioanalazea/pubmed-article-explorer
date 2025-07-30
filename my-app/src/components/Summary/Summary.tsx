@@ -1,37 +1,19 @@
-import { useEffect, useState } from "react";
 //Import components:
 import { Button } from "../UI";
 // Import types:
 import { Article } from "../../types";
 import { extractYear, removeDoi } from "../../utils/format";
-// Import utils:
 
 type SummaryProps = {
   article: Article | null;
+  abstract: string;
   close: () => void;
 };
-function Summary({ article, close }: SummaryProps) {
-  const [abstract, setAbstract] = useState("");
-  const getAbstract = async () => {
-    try {
-      const res = await fetch(
-        `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${article?.uid}&retmode=json&rettype=abstract`
-      );
-      const text = await res.text();
-      setAbstract(text);
-    } catch (err) {
-      console.log("Error getting abstract.");
-    }
-  };
-
-  useEffect(() => {
-    getAbstract();
-  });
-
+function Summary({ article, abstract, close }: SummaryProps) {
   return (
-    <div className="fixed top-0 right-0 h-full w-1/2 bg-white shadow-lg z-50 transition-all duration-300">
-      <div className="p-4 flex items-center">
-        <p className="text-xl font-bold">{article?.title}</p>
+    <div className="fixed top-0 right-0 h-full md:w-1/2 bg-white shadow-lg z-50 transition-all duration-300 p-2">
+      <div className="p-4 space-x-4 flex items-center">
+        <p className="text-xl font-bold text-left">{article?.title}</p>
         <Button onClick={close} text={"Close"} />
       </div>
       <div className="p-4 space-y-1">
@@ -51,9 +33,11 @@ function Summary({ article, close }: SummaryProps) {
           <b>Pages:</b> {article?.pages}
         </p>
       </div>
-      <div className="p-4">
-        <p className="text-lg font-medium">Abstract</p>
-        <p className="text-sm overflow-y">{abstract}</p>
+      <div className="p-4 flex flex-col">
+        <p className="text-lg font-medium mb-1">Abstract</p>
+        <div className="text-sm max-h-80 overflow-y-auto text-justify">
+          {abstract}
+        </div>
       </div>
     </div>
   );

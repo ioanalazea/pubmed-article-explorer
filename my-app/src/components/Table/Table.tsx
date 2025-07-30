@@ -1,11 +1,14 @@
 import { useState } from "react";
-// Import types:
-import { Article } from "../../types";
 
 // Import components:
 import { Summary } from "../Summary";
 import { Button } from "../UI";
+
+// Import utils:
 import { extractYear, removeDoi } from "../../utils/format";
+
+// Import types:
+import { Article } from "../../types";
 
 type TableProps = {
   data: Article[];
@@ -17,7 +20,8 @@ const ITEMS_PER_PAGE = 7;
 
 function Table({ data, currentPage, setCurrentPage }: TableProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedArticle, setSelectedArticle] = useState(null);
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [abstract, setAbstract] = useState("");
 
   const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE);
   const paginatedData = data.slice(
@@ -25,7 +29,20 @@ function Table({ data, currentPage, setCurrentPage }: TableProps) {
     currentPage * ITEMS_PER_PAGE
   );
 
-  const openSummary = (value: any) => {
+  const getAbstract = async (uid: string) => {
+    try {
+      const res = await fetch(
+        `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${uid}&retmode=json&rettype=abstract`
+      );
+      const text = await res.text();
+      setAbstract(text);
+    } catch (err) {
+      console.log("Error getting abstract.");
+    }
+  };
+
+  const openSummary = async (value: Article) => {
+    await getAbstract(value.uid);
     setSelectedArticle(value);
     setIsOpen(true);
   };
@@ -93,7 +110,11 @@ function Table({ data, currentPage, setCurrentPage }: TableProps) {
             className="fixed inset-0 bg-black bg-opacity-50 z-40"
             onClick={closeSummary}
           ></div>
-          <Summary article={selectedArticle} close={closeSummary} />
+          <Summary
+            article={selectedArticle}
+            abstract={abstract}
+            close={closeSummary}
+          />
         </>
       )}
     </div>
