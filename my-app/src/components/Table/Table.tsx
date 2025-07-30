@@ -8,14 +8,15 @@ import { Button } from "../UI";
 
 type TableProps = {
   data: Article[];
+  currentPage: number;
+  setCurrentPage: (val: number) => void;
 };
 
 const ITEMS_PER_PAGE = 10;
 
-function Table({ data }: TableProps) {
+function Table({ data, currentPage, setCurrentPage }: TableProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE);
   const paginatedData = data.slice(
