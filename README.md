@@ -93,6 +93,7 @@ Next, being so many articles (more than 28 000), they can't be processed one by 
 - Add more filter options. Also maybe filter or search as you type.
 - Find a way to clean the abstract (!Important). As of yet, the abstract does not have a clear format (coming from the API). It is returned as text but the abstract differ for each article. (Some do have a pattern - an attempt was to try to extract between last Author Information and Copyright).
 - Error message for filters (example: "Year" filter should not allow text, only numbers).
+- Make the Table component more general to support different types.
 
 #### Testing
 - Add more test cases.
