@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // Import components
 import { SearchFilter, Table } from "../components";
 // Import API:
-import { getArticles } from "../api/pubmed";
+import { getArticles, getArticlesBatch } from "../api/pubmed";
 // Import types
 import { Article } from "../types";
 // Import utils
@@ -20,13 +20,36 @@ function ArticlePage() {
   const [appliedFilter, setAppliedFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Old get articles function
+  // useEffect(() => {
+  //   const loadArticles = async () => {
+  //     setLoading(true);
+  //      const results = await getArticles();
+  //     setInitialArticles(results);
+  //     setLoading(false);
+  //   };
+  //   loadArticles();
+  // }, []);
+
+  const addedUidsRef = useRef<Set<string>>(new Set());
+
+  // New get articles function using batches
   useEffect(() => {
     const loadArticles = async () => {
       setLoading(true);
-      const results = await getArticles();
-      setInitialArticles(results);
+      await getArticlesBatch((batch) => {
+        const uniqueBatch = batch.filter((article) => {
+          if (addedUidsRef.current.has(article.uid)) return false;
+          addedUidsRef.current.add(article.uid);
+          return true;
+        });
+        if (uniqueBatch.length > 0) {
+          setInitialArticles((prev) => [...prev, ...uniqueBatch]);
+        }
+      });
       setLoading(false);
     };
+
     loadArticles();
   }, []);
 
