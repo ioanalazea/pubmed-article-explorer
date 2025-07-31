@@ -1,62 +1,52 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // Import components
 import { SearchFilter, Table } from "../components";
+// Import API:
+import { getArticlesBatch } from "../api/pubmed";
 // Import types
 import { Article } from "../types";
 // Import utils
-import { getAuthorNames } from "../utils/format";
 import { filterTableData } from "../utils/filterTableData";
 
 function ArticlePage() {
   const [initialArticles, setInitialArticles] = useState<Article[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [journal, setJournal] = useState("");
+  const [year, setYear] = useState("");
   const [appliedFilter, setAppliedFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const addedUidsRef = useRef<Set<string>>(new Set());
+  const [hasMoreBatches, setHasMoreBatches] = useState(true);
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const idsRes = await fetch(
-          "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=artificial+intelligence+in+healthcare&retmode=json&retmax=20"
-        );
-        const json = await idsRes.json();
-        const ids: string[] = json.esearchresult.idlist;
-        if (ids.length === 0) return;
+    const loadArticles = async () => {
+      setLoading(true);
+      setHasMoreBatches(true);
 
-        const articlesRes = await fetch(
-          `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${ids.join(
-            ","
-          )}&retmode=json`
-        );
-
-        const articlesJson = await articlesRes.json();
-
-        const results = ids.map((uid) => {
-          const article = articlesJson.result[uid];
-          return {
-            uid: article.uid,
-            title: article.title,
-            authors: getAuthorNames(article.authors),
-            journal: article.fulljournalname,
-            year: article.pubdate,
-            doi: article.elocationid,
-            pages: article.pages,
-          };
+      await getArticlesBatch((batch, isLastBatch = false) => {
+        const uniqueBatch = batch.filter((article) => {
+          if (addedUidsRef.current.has(article.uid)) return false;
+          addedUidsRef.current.add(article.uid);
+          return true;
         });
 
-        setInitialArticles(results);
-      } catch (err) {
-        console.log("Error");
-      } finally {
-        console.log("Worked!");
-      }
+        if (uniqueBatch.length > 0) {
+          setInitialArticles((prev) => [...prev, ...uniqueBatch]);
+        }
+
+        if (isLastBatch) {
+          setHasMoreBatches(false);
+          setLoading(false);
+        }
+      });
     };
 
-    fetchData();
+    loadArticles();
   }, []);
 
   const applyFilters = () => {
@@ -64,35 +54,57 @@ function ArticlePage() {
       title,
       author,
       journal,
+      year,
     });
     setArticles(filtered);
     setCurrentPage(1);
-    if (title === "" && author === "" && journal === "")
+    if (title === "" && author === "" && journal === "" && year === "")
       setAppliedFilter(false);
     else setAppliedFilter(true);
   };
 
   return (
-    <div>
+    <div className="h-screen flex flex-col">
       <div className="bg-[#166088] text-white font-bold text-2xl p-4">
         PubMed Article Explorer
       </div>
-      <SearchFilter
-        title={title}
-        setTitle={setTitle}
-        author={author}
-        setAuthor={setAuthor}
-        journal={journal}
-        setJournal={setJournal}
-        appliedFilter={appliedFilter}
-        setAppliedFilter={setAppliedFilter}
-        onApply={applyFilters}
-      />
-      <Table
-        data={appliedFilter ? articles : initialArticles}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
+      <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+        <div className="w-full md:w-1/3 bg-[#e1e1e135] md:p-4 pb-2">
+          <SearchFilter
+            title={title}
+            setTitle={setTitle}
+            author={author}
+            setAuthor={setAuthor}
+            journal={journal}
+            setJournal={setJournal}
+            year={year}
+            setYear={setYear}
+            appliedFilter={appliedFilter}
+            setAppliedFilter={setAppliedFilter}
+            onApply={applyFilters}
+          />
+          {hasMoreBatches && (
+            <div className="flex flex-col justify-center items-center">
+              <p className="mb-4 text-[#166088] font-semibold text-base">
+                Still loading articles...
+              </p>
+            </div>
+          )}
+        </div>
+        <div className="w-full md:w-3/4 md:p-4 overflow-auto mt-2 md:mt-0 pb-2">
+          {loading && initialArticles.length === 0 ? (
+            <div className="flex justify-center items-center h-full">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-[#166088]"></div>
+            </div>
+          ) : (
+            <Table
+              data={appliedFilter ? articles : initialArticles}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }
