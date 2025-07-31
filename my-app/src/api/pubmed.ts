@@ -57,7 +57,7 @@ export const getArticlesBatch = async (
 
     const countJson = await countRes.json();
     // const total = parseInt(countJson.esearchresult.count, 10);
-    const total = 100;
+    const total = 300;
     const allIds = new Set<string>();
     for (let start = 0; start < total; start += BATCH_SIZE) {
       const idsRes = await fetch(

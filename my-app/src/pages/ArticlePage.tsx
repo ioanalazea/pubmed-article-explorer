@@ -53,6 +53,7 @@ function ArticlePage() {
     loadArticles();
   }, []);
 
+
   const applyFilters = () => {
     const filtered = filterTableData(initialArticles, {
       title,
@@ -87,9 +88,16 @@ function ArticlePage() {
             setAppliedFilter={setAppliedFilter}
             onApply={applyFilters}
           />
+          {loading && (
+            <div className="flex flex-col justify-center items-center h-full">
+              <p className="mb-4 text-[#166088] font-semibold text-lg">
+                Still loading articles...
+              </p>
+            </div>
+          )}
         </div>
         <div className="w-full md:w-3/4 md:p-4 overflow-auto mt-2 md:mt-0 pb-2">
-          {loading ? (
+          {loading && initialArticles.length === 0 ? (
             <div className="flex justify-center items-center h-full">
               <div className="animate-spin rounded-full h-8 w-8 border-t-4 border-b-4 border-[#166088]"></div>
             </div>
