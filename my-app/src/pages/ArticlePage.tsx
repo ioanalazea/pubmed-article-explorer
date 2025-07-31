@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 // Import components
 import { SearchFilter, Table } from "../components";
 // Import API:
-import { getArticles, getArticlesBatch } from "../api/pubmed";
+import { getArticlesBatch } from "../api/pubmed";
 // Import types
 import { Article } from "../types";
 // Import utils
@@ -20,39 +20,34 @@ function ArticlePage() {
   const [appliedFilter, setAppliedFilter] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Old get articles function
-  // useEffect(() => {
-  //   const loadArticles = async () => {
-  //     setLoading(true);
-  //      const results = await getArticles();
-  //     setInitialArticles(results);
-  //     setLoading(false);
-  //   };
-  //   loadArticles();
-  // }, []);
-
   const addedUidsRef = useRef<Set<string>>(new Set());
+  const [hasMoreBatches, setHasMoreBatches] = useState(true);
 
-  // New get articles function using batches
   useEffect(() => {
     const loadArticles = async () => {
       setLoading(true);
-      await getArticlesBatch((batch) => {
+      setHasMoreBatches(true);
+
+      await getArticlesBatch((batch, isLastBatch = false) => {
         const uniqueBatch = batch.filter((article) => {
           if (addedUidsRef.current.has(article.uid)) return false;
           addedUidsRef.current.add(article.uid);
           return true;
         });
+
         if (uniqueBatch.length > 0) {
           setInitialArticles((prev) => [...prev, ...uniqueBatch]);
         }
+
+        if (isLastBatch) {
+          setHasMoreBatches(false);
+          setLoading(false);
+        }
       });
-      setLoading(false);
     };
 
     loadArticles();
   }, []);
-
 
   const applyFilters = () => {
     const filtered = filterTableData(initialArticles, {
@@ -88,9 +83,9 @@ function ArticlePage() {
             setAppliedFilter={setAppliedFilter}
             onApply={applyFilters}
           />
-          {loading && (
-            <div className="flex flex-col justify-center items-center h-full">
-              <p className="mb-4 text-[#166088] font-semibold text-lg">
+          {hasMoreBatches && (
+            <div className="flex flex-col justify-center items-center">
+              <p className="mb-4 text-[#166088] font-semibold text-base">
                 Still loading articles...
               </p>
             </div>

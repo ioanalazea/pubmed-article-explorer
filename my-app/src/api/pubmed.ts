@@ -4,7 +4,7 @@ import { Article } from "../types";
 // Import utils:
 import { getAuthorNames } from "../utils/format";
 
-const API_KEY = "624648cf5fb358c1be82198503eb420b5308";
+const API_KEY = process.env.REACT_APP_PUBMED_API_KEY;
 const BATCH_SIZE = 50;
 const REQUEST_DELAY_MS = 350;
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -46,9 +46,9 @@ export const getArticles = async (): Promise<Article[]> => {
   }
 };
 
-// GET articles in BATCH
+// GET articles in BATCHES
 export const getArticlesBatch = async (
-  onBatchUpdate: (batch: Article[]) => void
+  onBatchUpdate: (batch: Article[], isLastBatch: boolean) => void
 ): Promise<void> => {
   try {
     const countRes = await fetch(
@@ -90,7 +90,9 @@ export const getArticlesBatch = async (
           pages: article.pages,
         };
       });
-      onBatchUpdate(batchArticles);
+      const isLastBatch = i + BATCH_SIZE >= allIdsArray.length;
+      onBatchUpdate(batchArticles, isLastBatch);
+
       articles.push(...batchArticles);
 
       await sleep(REQUEST_DELAY_MS);

@@ -29,12 +29,12 @@ cd my-app
 npm install
 ```
 
-### 3. Add your PubMed API key to the pubmed.ts file in the /api folder.
+### 3. Create a .env file in your root folder (my-app) and set the variable REACT_APP_PUBMED_API_KEY with your PubMed API key.
 
 This allows you 10 requests/second with the PubMed API.
 
-```tsx
-API_KEY = "....";
+```tsxW
+REACT_APP_PUBMED_API_KEY = "...."
 ```
 
 ### 4. Start the server
@@ -57,7 +57,7 @@ Therefore, first step to solve this was **adding an API key** provided by PubMed
 
 Next, being so many articles (more than 28 000), they can't be processed one by one, meaning the API call for summary can't be done for each one. That's why, the summary call was done using an **array of UIDs**. Another improvement was to process the articles in batches, using a BATCH_SIZE parameter, which allowed to interate over all the existing results. Also, after every call, a wait time (sleep) was added so request do not happen too soon that it would trigger the error (Too Many Requests).
 
-**Remaining limitation**: Being too many articles, it takes a very long time to update the whole table. That is why the total count was capped at around 100 articles (at least for now). Improvements to be made for this case. Also, sometimes the API is not working (usually happened when I refreshed the page twice and too soon)
+**Remaining limitation**: Being too many articles, it takes a very long time to update the whole table. That is why the total count was capped at around 300 articles (at least for now). Improvements to be made for this case. Also, sometimes the API is not working (usually happened when I refreshed the page twice and too soon)
 
 ### Notables
 
@@ -99,7 +99,6 @@ Next, being so many articles (more than 28 000), they can't be processed one by 
 
 #### API
 - Faster loading.
-- Update the table as the batches come, not wait for everything. (!important)
 
 ## License
 This project is for demonstration purposes and is not officially affiliated with PubMed or NCBI.
